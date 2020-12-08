@@ -1,6 +1,6 @@
 const users = require('../data/index');
 // If I want to use sampleUser
-// const sampleUser = require('../data/sampleUser');
+const sampleUser = require('../data/sampleUser');
 
 // GET USERS
 const listUsers = (req, res) => {
@@ -21,9 +21,9 @@ const showUser = (req, res) => {
 
 // POST USER
 const createUser = (req, res) => {
-    let lastUser = users[users.length - 1].id
-    let count = lastUser + 1;
-    // newUser.id = count;
+    const lastUser = users[users.length - 1].id
+    const count = lastUser + 1;
+    // Manual Way
     const newUser = {
         id: count,
         name: req.body.name,
@@ -31,12 +31,18 @@ const createUser = (req, res) => {
         email: req.body.email
     }
 
+    // Using Sample User
+
+    // const newUser = {
+    //     ...sampleUser
+    // }
+    // newUser.id = count;
+
     if(!newUser.name || !newUser.username || !newUser.email){
         return res.status(400).json({ msg:"Please enter name, username and email." })
     }
 
-    // adds sampleUser to end of array
-    // users.push(sampleUser)
+
     users.push(newUser)
     res.json(users)
 };
@@ -69,11 +75,7 @@ const deleteUser = (req, res) => {
     if(found){
         const userId = parseInt(req.params.id)
         users.splice(userId-1, 1)
-        res.json(users)
-    //   res.json({
-    //      msg: "Deleted User",
-    //      users: users.filter(user => user.id !== parseInt(req.params.id))
-    //     });
+        res.json({ msg: `Deleted user with id of ${userId}`, users})
     }else {
       res.status(400).json({ msg: `no member with id of ${req.params.id}` })
     }
