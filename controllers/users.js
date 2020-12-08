@@ -21,8 +21,11 @@ const showUser = (req, res) => {
 
 // POST USER
 const createUser = (req, res) => {
+    let lastUser = users[users.length - 1].id
+    let count = lastUser + 1;
+    // newUser.id = count;
     const newUser = {
-        id: users.length + 1,
+        id: count,
         name: req.body.name,
         username: req.body.username,
         email: req.body.email
@@ -64,10 +67,13 @@ const deleteUser = (req, res) => {
     const found = users.some(user => user.id === parseInt(req.params.id));
   
     if(found){
-      res.json({
-         msg: "Deleted User",
-         users: users.filter(user => user.id !== parseInt(req.params.id))
-        });
+        const userId = parseInt(req.params.id)
+        users.splice(userId-1, 1)
+        res.json(users)
+    //   res.json({
+    //      msg: "Deleted User",
+    //      users: users.filter(user => user.id !== parseInt(req.params.id))
+    //     });
     }else {
       res.status(400).json({ msg: `no member with id of ${req.params.id}` })
     }
